@@ -1,0 +1,29 @@
+Command line:
+   sequencer2_isim_beh.exe
+     -simmode  gui
+     -simrunnum  0
+     -socket  53953
+
+Thu Oct 11 00:23:20 2012
+
+
+ Elaboration Time: 0.0312 sec
+
+ Current Memory Usage: 492.077 Meg
+
+ Total Signals          : 46
+ Total Nets             : 308
+ Total Signal Drivers   : 31
+ Total Blocks           : 5
+ Total Primitive Blocks : 5
+ Total Processes        : 1
+ Total Traceable Variables  : 45
+ Total Scalar Nets and Variables : 904
+Total Line Count : 65
+
+ Total Simulation Time: 0.1404 sec
+
+ Current Memory Usage: 492.077 Meg
+
+Thu Oct 11 00:24:04 2012
+

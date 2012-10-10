@@ -1,0 +1,5 @@
+set -tmpdir "C:/Users/praveen/Documents/AA_MODULES/CG3207/Lab/CPU_Design/xst/projnav.tmp"
+set -xsthdpdir "C:/Users/praveen/Documents/AA_MODULES/CG3207/Lab/CPU_Design/xst"
+elaborate
+-ifn sequencer2.prj
+-ifmt mixed

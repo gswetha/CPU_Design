@@ -1,0 +1,1 @@
+-intstyle "ise" -incremental -o "C:/Users/praveen/Documents/AA_MODULES/CG3207/Lab/CPU_Design/test_bench1_isim_beh.exe" -prj "C:/Users/praveen/Documents/AA_MODULES/CG3207/Lab/CPU_Design/test_bench1_beh.prj" "work.test_bench1" 

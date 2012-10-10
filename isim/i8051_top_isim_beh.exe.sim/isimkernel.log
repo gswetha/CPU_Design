@@ -1,0 +1,29 @@
+Command line:
+   i8051_top_isim_beh.exe
+     -simmode  gui
+     -simrunnum  0
+     -socket  57072
+
+Wed Oct 03 02:10:49 2012
+
+
+ Elaboration Time: 0.031201 sec
+
+ Current Memory Usage: 508.506 Meg
+
+ Total Signals          : 254
+ Total Nets             : 1910
+ Total Signal Drivers   : 184
+ Total Blocks           : 16
+ Total Primitive Blocks : 13
+ Total Processes        : 103
+ Total Traceable Variables  : 47
+ Total Scalar Nets and Variables : 35275
+Total Line Count : 430
+
+ Total Simulation Time: 0.140401 sec
+
+ Current Memory Usage: 508.506 Meg
+
+Wed Oct 03 02:12:22 2012
+

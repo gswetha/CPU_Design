@@ -1,0 +1,38 @@
+Release 13.2 - xst O.61xd (nt64)
+Copyright (c) 1995-2011 Xilinx, Inc.  All rights reserved.
+--> Parameter TMPDIR set to C:/Users/praveen/Documents/AA_MODULES/CG3207/Lab/CPU_Design/xst/projnav.tmp
+
+
+Total REAL time to Xst completion: 0.00 secs
+Total CPU time to Xst completion: 0.56 secs
+ 
+--> Parameter xsthdpdir set to C:/Users/praveen/Documents/AA_MODULES/CG3207/Lab/CPU_Design/xst
+
+
+Total REAL time to Xst completion: 0.00 secs
+Total CPU time to Xst completion: 0.56 secs
+ 
+--> WARNING:Xst:3164 - Option "-debug" found multiple times in the command line. Only the first occurence is considered.
+
+=========================================================================
+*                          HDL Compilation                              *
+=========================================================================
+WARNING:HDLParsers:3607 - Unit work/sequencer2 is now defined in a different file.  It was defined in "D:/Xilinx/MyProject/sequencer2.vhd", and is now defined in "C:/Users/praveen/Documents/AA_MODULES/CG3207/Lab/CPU_Design/sequencer2.vhd".
+WARNING:HDLParsers:3607 - Unit work/sequencer2/seq_arch is now defined in a different file.  It was defined in "D:/Xilinx/MyProject/sequencer2.vhd", and is now defined in "C:/Users/praveen/Documents/AA_MODULES/CG3207/Lab/CPU_Design/sequencer2.vhd".
+WARNING:HDLParsers:3607 - Unit work/constants is now defined in a different file.  It was defined in "D:/Xilinx/MyProject/constants.vhd", and is now defined in "C:/Users/praveen/Documents/AA_MODULES/CG3207/Lab/CPU_Design/constants.vhd".
+Compiling vhdl file "C:/Users/praveen/Documents/AA_MODULES/CG3207/Lab/CPU_Design/constants.vhd" in Library work.
+Compiling vhdl file "C:/Users/praveen/Documents/AA_MODULES/CG3207/Lab/CPU_Design/sequencer2.vhd" in Library work.
+Architecture seq_arch of Entity sequencer2 is up to date.
+
+
+Total REAL time to Xst completion: 1.00 secs
+Total CPU time to Xst completion: 1.17 secs
+ 
+--> 
+
+Total memory usage is 194256 kilobytes
+
+Number of errors   :    0 (   0 filtered)
+Number of warnings :    4 (   0 filtered)
+Number of infos    :    0 (   0 filtered)
+

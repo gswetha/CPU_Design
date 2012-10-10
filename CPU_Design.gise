@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<generated_project xmlns="http://www.xilinx.com/XMLSchema" xmlns:xil_pn="http://www.xilinx.com/XMLSchema">
+
+  <!--                                                          -->
+
+  <!--             For tool use only. Do not edit.              -->
+
+  <!--                                                          -->
+
+  <!-- ProjectNavigator created generated project file.         -->
+
+  <!-- For use in tracking generated file and other information -->
+
+  <!-- allowing preservation of process status.                 -->
+
+  <!--                                                          -->
+
+  <!-- Copyright (c) 1995-2011 Xilinx, Inc.  All rights reserved. -->
+
+  <version xmlns="http://www.xilinx.com/XMLSchema">11.1</version>
+
+  <sourceproject xmlns="http://www.xilinx.com/XMLSchema" xil_pn:fileType="FILE_XISE" xil_pn:name="CPU_Design.xise"/>
+
+  <files xmlns="http://www.xilinx.com/XMLSchema">
+    <file xil_pn:fileType="FILE_LSO" xil_pn:name=".lso"/>
+    <file xil_pn:fileType="FILE_LOG" xil_pn:name="fuse.log"/>
+    <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="isim"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_CMD" xil_pn:name="isim.cmd"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_LOG" xil_pn:name="isim.log"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="sequencer2.prj"/>
+    <file xil_pn:fileType="FILE_XST_STX" xil_pn:name="sequencer2.stx"/>
+    <file xil_pn:fileType="FILE_XST" xil_pn:name="sequencer2.xst"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="sequencer2_isim_beh.exe"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="sequencer2_stx_beh.prj"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="test_bench1_beh.prj"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="test_bench1_isim_beh.exe"/>
+    <file xil_pn:fileType="FILE_ISIM_MISC" xil_pn:name="test_bench1_isim_beh.wdb"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="test_bench1_stx_beh.prj"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_INI" xil_pn:name="xilinxsim.ini"/>
+    <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="xst"/>
+  </files>
+
+  <transforms xmlns="http://www.xilinx.com/XMLSchema">
+    <transform xil_pn:end_ts="1349885462" xil_pn:name="TRAN_copyInitialToAbstractSimulation" xil_pn:start_ts="1349885462">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1349885462" xil_pn:in_ck="7398805278779205360" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1349885462">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="8051_top_fpga.vhd"/>
+      <outfile xil_pn:name="constants.vhd"/>
+      <outfile xil_pn:name="csadder.vhd"/>
+      <outfile xil_pn:name="divider.vhd"/>
+      <outfile xil_pn:name="ext_interrupt.vhd"/>
+      <outfile xil_pn:name="fastalu.vhd"/>
+      <outfile xil_pn:name="int_handler.vhd"/>
+      <outfile xil_pn:name="int_ram.vhd"/>
+      <outfile xil_pn:name="int_rom.vhd"/>
+      <outfile xil_pn:name="multiplier.vhd"/>
+      <outfile xil_pn:name="regfile.vhd"/>
+      <outfile xil_pn:name="sequencer2.vhd"/>
+      <outfile xil_pn:name="test_bench1.vhd"/>
+    </transform>
+    <transform xil_pn:end_ts="1349886250" xil_pn:name="TRAN_xawsToSimhdl" xil_pn:prop_ck="-2384287164122622426" xil_pn:start_ts="1349886250">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1349886250" xil_pn:name="TRAN_schematicsToHdlSim" xil_pn:prop_ck="-7227535400160692562" xil_pn:start_ts="1349886250">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1349885466" xil_pn:name="TRAN_regenerateCoresSim" xil_pn:prop_ck="7475078928321254842" xil_pn:start_ts="1349885466">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1349885466" xil_pn:in_ck="7398805278779205360" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1349885466">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="WarningsGenerated"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="8051_top_fpga.vhd"/>
+      <outfile xil_pn:name="constants.vhd"/>
+      <outfile xil_pn:name="csadder.vhd"/>
+      <outfile xil_pn:name="divider.vhd"/>
+      <outfile xil_pn:name="ext_interrupt.vhd"/>
+      <outfile xil_pn:name="fastalu.vhd"/>
+      <outfile xil_pn:name="int_handler.vhd"/>
+      <outfile xil_pn:name="int_ram.vhd"/>
+      <outfile xil_pn:name="int_rom.vhd"/>
+      <outfile xil_pn:name="multiplier.vhd"/>
+      <outfile xil_pn:name="regfile.vhd"/>
+      <outfile xil_pn:name="sequencer2.vhd"/>
+      <outfile xil_pn:name="test_bench1.vhd"/>
+    </transform>
+    <transform xil_pn:end_ts="1349886255" xil_pn:in_ck="7398805278779205360" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="-8054111825193203286" xil_pn:start_ts="1349886250">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="OutputChanged"/>
+      <outfile xil_pn:name="fuse.log"/>
+      <outfile xil_pn:name="isim"/>
+      <outfile xil_pn:name="isim.log"/>
+      <outfile xil_pn:name="test_bench1_beh.prj"/>
+      <outfile xil_pn:name="test_bench1_isim_beh.exe"/>
+      <outfile xil_pn:name="xilinxsim.ini"/>
+    </transform>
+    <transform xil_pn:end_ts="1349886255" xil_pn:in_ck="921651981755118187" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-8229146112493494761" xil_pn:start_ts="1349886255">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="OutputChanged"/>
+      <outfile xil_pn:name="isim.cmd"/>
+      <outfile xil_pn:name="isim.log"/>
+      <outfile xil_pn:name="test_bench1_isim_beh.wdb"/>
+    </transform>
+  </transforms>
+
+</generated_project>

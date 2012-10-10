@@ -1,0 +1,3 @@
+vhdl work "ext_interrupt.vhd"
+vhdl work "constants.vhd"
+vhdl work "regfile.vhd"

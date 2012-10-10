@@ -1,0 +1,3 @@
+vhdl work "D:\Xilinx\MyProject\ext_interrupt.vhd"
+vhdl work "D:\Xilinx\MyProject\constants.vhd"
+vhdl work "D:\Xilinx\MyProject\regfile.vhd"

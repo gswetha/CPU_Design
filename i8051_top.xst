@@ -1,0 +1,5 @@
+set -tmpdir "D:/Xilinx/MyProject/xst/projnav.tmp"
+set -xsthdpdir "D:/Xilinx/MyProject/xst"
+elaborate
+-ifn i8051_top.prj
+-ifmt mixed

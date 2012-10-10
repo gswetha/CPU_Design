@@ -1,0 +1,59 @@
+Release 14.2 - xst P.28xd (nt)
+Copyright (c) 1995-2012 Xilinx, Inc.  All rights reserved.
+--> Parameter TMPDIR set to D:/Xilinx/MyProject/xst/projnav.tmp
+
+
+Total REAL time to Xst completion: 0.00 secs
+Total CPU time to Xst completion: 0.08 secs
+ 
+--> Parameter xsthdpdir set to D:/Xilinx/MyProject/xst
+
+
+Total REAL time to Xst completion: 0.00 secs
+Total CPU time to Xst completion: 0.08 secs
+ 
+--> WARNING:Xst:3164 - Option "-debug" found multiple times in the command line. Only the first occurence is considered.
+
+=========================================================================
+*                          HDL Compilation                              *
+=========================================================================
+Compiling vhdl file "D:/Xilinx/MyProject/constants.vhd" in Library work.
+Compiling vhdl file "D:/Xilinx/MyProject/ext_interrupt.vhd" in Library work.
+Architecture behavioral of Entity ext_interrupt is up to date.
+Compiling vhdl file "D:/Xilinx/MyProject/csadder.vhd" in Library work.
+Architecture csadderbeh of Entity csadder is up to date.
+Compiling vhdl file "D:/Xilinx/MyProject/sequencer2.vhd" in Library work.
+Entity <sequencer2> compiled.
+Entity <sequencer2> (Architecture <seq_arch>) compiled.
+Compiling vhdl file "D:/Xilinx/MyProject/fastalu.vhd" in Library work.
+Architecture fastalu_arch of Entity fastalu is up to date.
+Compiling vhdl file "D:/Xilinx/MyProject/regfile.vhd" in Library work.
+Entity <regfile> compiled.
+Entity <regfile> (Architecture <regarch>) compiled.
+Compiling vhdl file "D:/Xilinx/MyProject/multiplier.vhd" in Library work.
+Architecture rtl of Entity multiplier is up to date.
+Compiling vhdl file "D:/Xilinx/MyProject/int_rom.vhd" in Library work.
+Entity <int_rom> compiled.
+Entity <int_rom> (Architecture <behavioral>) compiled.
+Compiling vhdl file "D:/Xilinx/MyProject/int_ram.vhd" in Library work.
+Architecture syn of Entity internal_ram is up to date.
+Compiling vhdl file "D:/Xilinx/MyProject/divider.vhd" in Library work.
+Architecture rtl of Entity divider is up to date.
+Compiling vhdl file "D:/Xilinx/MyProject/int_handler.vhd" in Library work.
+Architecture behavioral of Entity int_handler is up to date.
+Compiling vhdl file "D:/Xilinx/MyProject/8051_top_fpga.vhd" in Library work.
+Entity <i8051_top> compiled.
+Entity <i8051_top> (Architecture <behavioral>) compiled.
+
+
+Total REAL time to Xst completion: 0.00 secs
+Total CPU time to Xst completion: 0.18 secs
+ 
+--> 
+
+Total memory usage is 185308 kilobytes
+
+Number of errors   :    0 (   0 filtered)
+Number of warnings :    1 (   0 filtered)
+Number of infos    :    0 (   0 filtered)
+

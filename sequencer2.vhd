@@ -192,7 +192,7 @@ begin
 							exe_state <= E0;
 							cpu_state <= T0; 
 						when others =>
-					end case;  -- exe_state of CLR A
+					end case;  -- exe_state of INC A
 					
 	
 

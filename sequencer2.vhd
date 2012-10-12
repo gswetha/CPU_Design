@@ -71,6 +71,51 @@ architecture seq_arch of sequencer2 is
 begin
 
     process(rst, clk)
+	
+------------------------------------------------------------------
+	procedure ROM_READ (addr: std_logic_vector(15 downto 0)) is
+	begin
+		i_rom_addr <= addr;
+		i_rom_rd <= '1';
+	end ROM_READ;
+------------------------------------------------------------------
+	procedure RAM_READ_BIT (addr: std_logic_vector(7 downto 0)) is
+	begin
+		i_ram_addr <= addr;
+		i_ram_wrBit <= '0';
+		i_ram_wrByte <= '0';
+		i_ram_rdBit <= '1';
+		i_ram_rdByte <= '0';
+	end RAM_READ_BIT;
+------------------------------------------------------------------
+	procedure RAM_READ_BYTE (addr: std_logic_vector(7 downto 0)) is
+	begin
+		i_ram_addr <= addr;
+		i_ram_wrBit <= '0';
+		i_ram_wrByte <= '0';
+		i_ram_rdBit <= '0';
+		i_ram_rdByte <= '1';
+	end RAM_READ_BYTE;
+------------------------------------------------------------------
+	procedure RAM_WRITE_BIT (addr: std_logic_vector(7 downto 0)) is
+	begin
+		i_ram_addr <= addr;
+		i_ram_wrBit <= '1';
+		i_ram_wrByte <= '0';
+		i_ram_rdBit <= '0';
+		i_ram_rdByte <= '0';
+	end RAM_WRITE_BIT;
+------------------------------------------------------------------
+	procedure RAM_WRITE_BYTE (addr: std_logic_vector(7 downto 0)) is
+	begin
+		i_ram_addr <= addr;
+		i_ram_wrBit <= '0';
+		i_ram_wrByte <= '1';
+		i_ram_rdBit <= '0';
+		i_ram_rdByte <= '0';
+	end RAM_WRITE_BYTE;
+------------------------------------------------------------------
+	
     begin
     if( rst = '1' ) then
    	cpu_state <= T0;
@@ -193,6 +238,330 @@ begin
 							cpu_state <= T0; 
 						when others =>
 					end case;  -- exe_state of INC A
+					
+				--ACALL addr11
+				when "00010001" | "00110001" | "01010001" | "01110001" | "10010001" | "10110001" | "11010001" | "11110001" =>
+					case_state is
+						when E0 =>
+							ROM_READ(PC);  			--read PC(7 downto 0)
+							RAM_READ_BYTE(x81);		--read data in sp
+							exe_state <= E1;
+							
+					  when E1 =>
+							PC <= PC + 1;
+							AR <= i_rom_data;  		-- AR <= PC(7 downto 0) 
+							DR <= i_ram_doByte;     -- sp 
+							exe_state <= E2;
+							
+					  when E2 =>
+							RAM_WRITE_BYTE(DR + 1);	--write PC(7 downto 0) into sp + 1 
+							i_ram_diByte <= PC(7 downto 0);
+							exe_state <= E3;
+							
+					  when E3 =>
+							RAM_WRITE_BYTE(DR + 2);	--write PC(15 downto 8) into sp + 2 
+							i_ram_diByte <= PC(15 downto 8);		
+							exe_state <= E4;
+							
+					  when E4 =>
+							RAM_WRITE_BYTE(x81);
+							i_ram_diByte <= DR + 2;
+							PC <= PC(15 downto 11) & IR(7 downto 5) & AR;	--PC(10 downto 0) <= page address
+							
+							exe_state <= E0;	
+							cpu_state <= T0;	
+							
+					  when others=>
+					end case; --ACALL addr11
+				
+				--LCALL addr16
+				when "00010010" =>
+					
+					case exe_state is
+					
+					  when E0 =>
+							ROM_READ(PC + 1);  	   --read PC(7 downto 0)
+							RAM_READ_BYTE(x81);		--read data in sp
+							PC <= PC + 2;
+							
+							exe_state <= E1;
+							
+					  when E1 =>
+							ROM_READ(PC - 2);			--read PC(15 downto 8)
+							RAM_WRITE_BYTE(i_ram_doByte + 1); --write (PC + 2)(7 downto 0) to sp+1
+							i_ram_diByte <= PC(7 downto 0);
+							DR <= i_rom_data;  -- write PC(7 downto 0) to dr
+							AR <= i_ram_doByte; -- sp 
+							
+							exe_state <= E2;
+							
+					  when E2 =>
+							RAM_WRITE_BYTE(AR + 2);     --write (PC + 2)(15 downto 8) into sp + 2
+							i_ram_diByte <= PC(15 downto 8);
+							PC <= i_rom_data & DR;
+							
+							exe_state <= E3;
+							
+					  when E3 =>
+							RAM_WRITE_BYTE(x81);				--write sp + 2 into sp 
+							i_ram_diByte <= AR + 2;		
+							
+							exe_state <= E0;	
+							cpu_state <= T0;	
+							
+					  when others=>
+					end case; --LCALL addr16
+				
+				--RET
+				when "00100010" =>					
+					case exe_state is
+					
+					  when E0 =>
+							RAM_READ_BYTE(x81);		--read data in sp,
+							
+							exe_state <= E1;
+							
+					  when E1 =>
+							RAM_READ_BYTE(i_ram_doByte);
+							DR <= i_ram_doByte;		--addr of top stack
+							
+							exe_state <= E2;
+							
+					  when E2 =>
+							RAM_READ_BYTE(DR - 1);
+							PC(15 downto 8) <= i_ram_doByte;	--pop the top stack
+							
+							exe_state <= E3;
+							
+					  when E3 =>
+							RAM_WRITE_BYTE(x81);
+							i_ram_diByte <= DR - 2;	--pop the 2nd of the stack
+							PC(7 downto 0) <= i_ram_doByte;
+							
+							exe_state <= E0;	
+							cpu_state <= T0;	
+							
+					  when others=>
+					end case; --RET
+				
+				--RETI					
+				when "00110010" =>
+					
+					case exe_state is
+					
+					  when E0 =>
+							RAM_READ_BYTE(x81);		--read data in sp
+							
+							exe_state <= E1;
+							
+					  when E1 =>
+							RAM_READ_BYTE(i_ram_doByte);
+							DR <= i_ram_doByte;
+							
+							exe_state <= E2;
+							
+					  when E2 =>
+							RAM_READ_BYTE(DR - 1);	--pop top of stack
+							PC(15 downto 8) <= i_ram_doByte;
+							
+							exe_state <= E3;
+							
+					  when E3 =>
+							RAM_WRITE_BYTE(x81);
+							i_ram_diByte <= DR - 2;	--pop 2nd of stack
+							PC(7 downto 0) <= i_ram_doByte;
+							
+							exe_state <= E0;	
+							cpu_state <= T0;	
+							
+					  when others=>
+					end case; --RETI
+				
+				--AJMP addr11				
+				when "00000001" | "00100001" | "01000001" | "01100001" | "10000001" | "10100001" | "11000001" | "11100001" =>
+					case exe_state is
+					
+						when E0 =>
+							ROM_READ(PC);
+							
+							exe_state <= E1;
+							
+						when E1 =>
+							PC <= PC + 1;
+							AR <= i_rom_data;
+							
+							exe_state <= E2;
+							
+						when E2 =>
+							PC <= PC(15 downto 11) & IR(7 downto 5) & AR;	--(PC10-0) <- page address
+							
+							exe_state <= E0;	
+							cpu_state <= T0;	
+							
+						when others=>
+					end case; --AJMP addr11
+				
+				--LJMP addr16				
+				when "00000010" =>
+					
+					case exe_state is
+					
+						when E0 =>
+							ROM_READ(PC);
+							
+							exe_state <= E1;
+							
+						when E1 =>
+							ROM_READ(PC + 1);
+							AR <= i_rom_data;
+							
+							exe_state <= E2;
+							
+						when E2 =>
+							PC <= AR & i_rom_data;  
+							
+							exe_state <= E0;	
+							cpu_state <= T0;	
+							
+						when others=>
+					end case; --LJMP addr16
+				
+				--SJMP rel
+				when "10000000" =>
+					
+					case exe_state is
+					
+						when E0 =>
+							ROM_READ(PC);
+							
+							exe_state <= E1;
+							
+						when E1 => 
+							
+							if i_rom_data(7) = '1' then
+								alu_src_2L <= PC(7 downto 0);
+								alu_src_2H <= PC(15 downto 8);	
+								alu_src_1L <= i_rom_data;
+								alu_src_1H <= "11111111";	
+								alu_op_code <= ALU_OPC_ADD;
+								alu_cy_bw <= '0';
+								alu_by_wd <= '1';
+							
+							else
+								alu_src_2L <= PC(7 downto 0);
+								alu_src_2H <= PC(15 downto 8);	
+								alu_src_1L <= i_rom_data;
+								alu_src_1H <= "00000000";	
+								alu_op_code <= ALU_OPC_ADD;
+								alu_cy_bw <= '0';
+								alu_by_wd <= '1';
+								
+							end if;
+							
+							exe_state <= E2;
+							
+						when E2 =>
+						   PC <= alu_ans_H & alu_ans_L;
+							
+							exe_state <= E3;
+							
+						when E3 =>
+						   PC <= PC + 1;
+							RESET_ALU;
+							
+							exe_state <= E0;	
+							cpu_state <= T0;	
+							
+						when others=>
+					end case; --SJMP rel
+				
+				--JMP @A + DPTR	
+				when "01110011"  =>
+					case exe_state is
+					
+						when E0 =>
+							RAM_READ_BYTE(x83); --read dph
+							
+							exe_state <= E1;
+							
+						when E1 =>
+							DR <= i_ram_doByte;
+							RAM_READ_BYTE(x82); --read dpl
+							
+							exe_state <= E2;
+							
+						when E2 =>
+						   AR <= i_ram_doByte;
+							RAM_READ_BYTE(xE0); --read acc
+								
+							exe_state <= E3;
+							
+						when E3 =>
+							alu_src_2L <= AR;
+							alu_src_2H <= DR;	
+							alu_src_1L <= i_ram_doByte;
+							alu_src_1H <= "00000000";	
+							alu_op_code <= ALU_OPC_ADD;
+							alu_cy_bw <= '0';
+							alu_by_wd <= '1';
+							
+							exe_state <= E4;
+							
+						when E4 =>
+							PC <= alu_ans_H & alu_ans_L;
+												
+							exe_state <= E0;	
+							cpu_state <= T0;	
+							
+						when others=>					
+					end case; --JMP @A + DPTR
+				
+				--JZ rel
+				WHEN "01100000" =>
+					CASE EXE_STATE IS
+						WHEN E0	=>
+							ROM_READ(PC);
+							RAM_READ_BYTE(XE0);	--read in acc
+							PC <= PC +1;
+									
+							EXE_STATE <= E1;
+						WHEN E1	=>
+							if( I_RAM_DOBYTE = "00000000" ) then	--check in acc is 0
+                                if(i_rom_data(7) = '0') then
+									PC <= PC + i_rom_data(6 downto 0);
+								else 
+									PC <= PC - not(i_rom_data(6 downto 0)) - 1;	--negative so convert to 1 complement
+								end if;
+                            end if;	
+									
+							CPU_STATE <= T0;
+							EXE_STATE <= E0;
+						WHEN OTHERS	=>
+				END CASE;	--jz rel
+				
+				--JNZ rel			--ZhenYong, Tested and simulated.
+				WHEN "01110000" =>
+					CASE EXE_STATE IS
+						WHEN E0	=>
+							ROM_READ(PC);
+							RAM_READ_BYTE(XE0);
+							PC <= PC +1;
+									
+							EXE_STATE <= E1;
+						WHEN E1	=>
+							if( I_RAM_DOBYTE /= "00000000" ) then
+                                if(i_rom_data(7) = '0') then
+									PC <= PC + i_rom_data(6 downto 0);
+								else 
+									PC <= PC - not(i_rom_data(6 downto 0)) - 1;
+								end if;
+                            end if;	
+									
+							CPU_STATE <= T0;
+							EXE_STATE <= E0;
+						WHEN OTHERS	=>
+					END CASE;	--jnz rel
+					
 					
 	
 

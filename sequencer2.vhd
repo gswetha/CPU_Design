@@ -248,24 +248,24 @@ begin
 							exe_state <= E1;
 							
 					  when E1 =>
-							PC <= PC + 1;
+							PC <= PC + '1';
 							AR <= i_rom_data;  		-- AR <= PC(7 downto 0) 
 							DR <= i_ram_doByte;     -- sp 
 							exe_state <= E2;
 							
 					  when E2 =>
-							RAM_WRITE_BYTE(DR + 1);	--write PC(7 downto 0) into sp + 1 
+							RAM_WRITE_BYTE(DR + '1');	--write PC(7 downto 0) into sp + 1 
 							i_ram_diByte <= PC(7 downto 0);
 							exe_state <= E3;
 							
 					  when E3 =>
-							RAM_WRITE_BYTE(DR + 2);	--write PC(15 downto 8) into sp + 2 
+							RAM_WRITE_BYTE(DR + '2');	--write PC(15 downto 8) into sp + 2 
 							i_ram_diByte <= PC(15 downto 8);		
 							exe_state <= E4;
 							
 					  when E4 =>
 							RAM_WRITE_BYTE(x81);
-							i_ram_diByte <= DR + 2;
+							i_ram_diByte <= DR + '2';
 							PC <= PC(15 downto 11) & IR(7 downto 5) & AR;	--PC(10 downto 0) <= page address
 							
 							exe_state <= E0;	
@@ -280,15 +280,15 @@ begin
 					case exe_state is
 					
 					  when E0 =>
-							ROM_READ(PC + 1);  	   --read PC(7 downto 0)
+							ROM_READ(PC + '1');  	   --read PC(7 downto 0)
 							RAM_READ_BYTE(x81);		--read data in sp
-							PC <= PC + 2;
+							PC <= PC + '2';
 							
 							exe_state <= E1;
 							
 					  when E1 =>
-							ROM_READ(PC - 2);			--read PC(15 downto 8)
-							RAM_WRITE_BYTE(i_ram_doByte + 1); --write (PC + 2)(7 downto 0) to sp+1
+							ROM_READ(PC - '2');			--read PC(15 downto 8)
+							RAM_WRITE_BYTE(i_ram_doByte + '1'); --write (PC + 2)(7 downto 0) to sp+1
 							i_ram_diByte <= PC(7 downto 0);
 							DR <= i_rom_data;  -- write PC(7 downto 0) to dr
 							AR <= i_ram_doByte; -- sp 
@@ -296,7 +296,7 @@ begin
 							exe_state <= E2;
 							
 					  when E2 =>
-							RAM_WRITE_BYTE(AR + 2);     --write (PC + 2)(15 downto 8) into sp + 2
+							RAM_WRITE_BYTE(AR + '2');     --write (PC + 2)(15 downto 8) into sp + 2
 							i_ram_diByte <= PC(15 downto 8);
 							PC <= i_rom_data & DR;
 							
@@ -304,7 +304,7 @@ begin
 							
 					  when E3 =>
 							RAM_WRITE_BYTE(x81);				--write sp + 2 into sp 
-							i_ram_diByte <= AR + 2;		
+							i_ram_diByte <= AR + '2';		
 							
 							exe_state <= E0;	
 							cpu_state <= T0;	
@@ -328,14 +328,14 @@ begin
 							exe_state <= E2;
 							
 					  when E2 =>
-							RAM_READ_BYTE(DR - 1);
+							RAM_READ_BYTE(DR - '1');
 							PC(15 downto 8) <= i_ram_doByte;	--pop the top stack
 							
 							exe_state <= E3;
 							
 					  when E3 =>
 							RAM_WRITE_BYTE(x81);
-							i_ram_diByte <= DR - 2;	--pop the 2nd of the stack
+							i_ram_diByte <= DR - '2';	--pop the 2nd of the stack
 							PC(7 downto 0) <= i_ram_doByte;
 							
 							exe_state <= E0;	
@@ -361,14 +361,14 @@ begin
 							exe_state <= E2;
 							
 					  when E2 =>
-							RAM_READ_BYTE(DR - 1);	--pop top of stack
+							RAM_READ_BYTE(DR - '1');	--pop top of stack
 							PC(15 downto 8) <= i_ram_doByte;
 							
 							exe_state <= E3;
 							
 					  when E3 =>
 							RAM_WRITE_BYTE(x81);
-							i_ram_diByte <= DR - 2;	--pop 2nd of stack
+							i_ram_diByte <= DR - '2';	--pop 2nd of stack
 							PC(7 downto 0) <= i_ram_doByte;
 							
 							exe_state <= E0;	
@@ -387,7 +387,7 @@ begin
 							exe_state <= E1;
 							
 						when E1 =>
-							PC <= PC + 1;
+							PC <= PC + '1';
 							AR <= i_rom_data;
 							
 							exe_state <= E2;
@@ -412,7 +412,7 @@ begin
 							exe_state <= E1;
 							
 						when E1 =>
-							ROM_READ(PC + 1);
+							ROM_READ(PC + '1');
 							AR <= i_rom_data;
 							
 							exe_state <= E2;
@@ -466,7 +466,7 @@ begin
 							exe_state <= E3;
 							
 						when E3 =>
-						   PC <= PC + 1;
+						   PC <= PC + '1';
 							RESET_ALU;
 							
 							exe_state <= E0;	
@@ -522,7 +522,7 @@ begin
 						WHEN E0	=>
 							ROM_READ(PC);
 							RAM_READ_BYTE(XE0);	--read in acc
-							PC <= PC +1;
+							PC <= PC + '1';
 									
 							EXE_STATE <= E1;
 						WHEN E1	=>
@@ -545,7 +545,7 @@ begin
 						WHEN E0	=>
 							ROM_READ(PC);
 							RAM_READ_BYTE(XE0);
-							PC <= PC +1;
+							PC <= PC + '1';
 									
 							EXE_STATE <= E1;
 						WHEN E1	=>
@@ -561,7 +561,389 @@ begin
 							EXE_STATE <= E0;
 						WHEN OTHERS	=>
 					END CASE;	--jnz rel
+				
+				--CJNE A,direct,rel
+				WHEN "10110101" =>
+					CASE EXE_STATE IS
+						WHEN E0	=>
+							ROM_READ(PC);
+							RAM_READ_BYTE(XE0);
+							PC <= PC + '1';
+									
+							EXE_STATE <= E1;
+						WHEN E1	=>
+							DR <= I_RAM_DOBYTE; --ACC
+							ROM_READ(PC);
+							RAM_READ_BYTE(i_rom_data);--direct addressed data
+							PC <= PC + '1';
+									
+							EXE_STATE <= E2;
+						WHEN E2	=>
+							RAM_READ_BYTE(XD0); --read psw
+							if( I_RAM_DOBYTE /= DR ) then
+								if(i_rom_data(7) = '0') then
+									PC <= PC + i_rom_data(6 downto 0);
+								else 
+									PC <= PC - not(i_rom_data(6 downto 0)) - 1;
+								end if;
+                            end if;
+									
+							EXE_STATE <= E3;
+						WHEN E3	=>
+							
+							if( DR < I_RAM_DOBYTE ) then
+								RAM_WRITE_BYTE(xD0);
+								i_ram_diByte <= '1' & I_RAM_DOBYTE(6 downto 0);
+							else
+								RAM_WRITE_BYTE(xD0);
+								i_ram_diByte <= '0' & I_RAM_DOBYTE(6 downto 0);
+							end if;
+							
+							CPU_STATE <= T0;
+							EXE_STATE <= E0;
+						
+						WHEN OTHERS	=>
+					END CASE;		--CJNE A,direct,rel
 					
+				--CJNE A,#data,rel
+				WHEN "10110100" =>
+					CASE EXE_STATE IS
+						WHEN E0	=>
+							ROM_READ(PC);
+							RAM_READ_BYTE(XD0); --PSW
+							PC <= PC + '1';
+									
+							EXE_STATE <= E1;
+						WHEN E1	=>
+							AR <= I_RAM_DOBYTE; --PSW
+							DR <= i_rom_data; --#data
+							RAM_READ_BYTE(XE0); --ACC
+							ROM_READ(PC);
+							PC <= PC + '1';
+									
+							EXE_STATE <= E2;
+						WHEN E2	=>
+							if( DR /= I_RAM_DOBYTE ) then
+								if(i_rom_data(7) = '0') then
+									PC <= PC + i_rom_data(6 downto 0);
+								else 
+									PC <= PC - not(i_rom_data(6 downto 0)) - 1;
+								end if;
+                            end if;
+									
+							EXE_STATE <= E3;
+						WHEN E3	=>
+							
+							if( I_RAM_DOBYTE < DR ) then
+								RAM_WRITE_BYTE(xD0);
+								i_ram_diByte <= '1' & AR(6 downto 0);
+							else
+								RAM_WRITE_BYTE(xD0);
+								i_ram_diByte <= '0' & AR(6 downto 0);
+							end if;
+		
+							CPU_STATE <= T0;
+							EXE_STATE <= E0;
+						
+						WHEN OTHERS	=>
+					END CASE;	--CJNE A,#data,rel
+					
+				--CJNE Rn,#data,rel
+				WHEN "10111000" | "10111001" | "10111010" | "10111011" | "10111100" | "10111101" | "10111110" | "10111111" =>
+					CASE EXE_STATE IS
+						WHEN E0	=>
+							ROM_READ(PC);
+							RAM_READ_BYTE(XD0); --PSW
+							PC <= PC + '1';
+									
+							EXE_STATE <= E1;
+						WHEN E1	=>
+							AR <= I_RAM_DOBYTE; --PSW
+							DR <= i_rom_data; --#data
+							RAM_READ_BYTE("000" & i_ram_doByte(4 downto 3) &  IR(2 downto 0)); --@Ri
+							ROM_READ(PC);
+							PC <= PC + '1';
+									
+							EXE_STATE <= E2;
+						WHEN E2	=>
+							if( DR /= I_RAM_DOBYTE ) then
+								if(i_rom_data(7) = '0') then
+									PC <= PC + i_rom_data(6 downto 0);
+								else 
+									PC <= PC - not(i_rom_data(6 downto 0)) - 1;	--negative
+								end if;
+                            end if;
+									
+							EXE_STATE <= E3;
+						WHEN E3	=>
+							
+							if( I_RAM_DOBYTE < DR ) then
+								RAM_WRITE_BYTE(xD0);
+								i_ram_diByte <= '1' & AR(6 downto 0);
+							else
+								RAM_WRITE_BYTE(xD0);
+								i_ram_diByte <= '0' & AR(6 downto 0);
+							end if;
+							
+							CPU_STATE <= T0;
+							EXE_STATE <= E0;
+						
+						WHEN OTHERS	=>
+					END CASE;	--CJNE Rn,#data,rel
+					
+				--CJNE @Ri,#data,rel
+				WHEN "10110110" | "10110111" =>
+					CASE EXE_STATE IS
+						WHEN E0	=>
+							ROM_READ(PC);
+							RAM_READ_BYTE(XD0); --PSW
+							PC <= PC + '1';
+									
+							EXE_STATE <= E1;
+						WHEN E1	=>
+							AR <= I_RAM_DOBYTE; --PSW
+							DR <= i_rom_data; --#data
+							RAM_READ_BYTE("000" & i_ram_doByte(4 downto 3) & "00" & IR(0)); --@Ri
+									
+							EXE_STATE <= E2;
+						
+						WHEN E2 =>
+							RAM_READ_BYTE(I_RAM_DOBYTE);
+							ROM_READ(PC);
+							PC <= PC + '1';
+							
+							EXE_STATE <= E3;
+							
+						WHEN E3	=>
+							if( DR /= I_RAM_DOBYTE ) then
+								if(i_rom_data(7) = '0') then
+									PC <= PC + i_rom_data(6 downto 0);
+								else 
+									PC <= PC - not(i_rom_data(6 downto 0)) - 1;	--negative
+								end if;
+                            end if;
+									
+							EXE_STATE <= E4;
+						WHEN E4	=>
+							
+							if( I_RAM_DOBYTE < DR ) then
+								RAM_WRITE_BYTE(xD0);
+								i_ram_diByte <= '1' & AR(6 downto 0);
+							else
+								RAM_WRITE_BYTE(xD0);
+								i_ram_diByte <= '0' & AR(6 downto 0);
+							end if;
+							
+							CPU_STATE <= T0;
+							EXE_STATE <= E0;
+						
+						WHEN OTHERS	=>
+					END CASE;	--CJNE @Ri,#data,rel
+					
+				--DJNZ Rn,rel
+				WHEN "11011000" | "11011001" | "11011010" | "11011011" | "11011100" | "11011101" | "11011110" | "11011111" =>
+					CASE EXE_STATE IS
+						WHEN E0	=>
+							ROM_READ(PC);
+							RAM_READ_BYTE(XD0); --PSW
+							PC <= PC + '1';
+									
+							EXE_STATE <= E1;
+						WHEN E1	=>
+							DR <= i_rom_data; --rel
+							RAM_READ_BYTE("000" & i_ram_doByte(4 downto 3) & IR(2 downto 0)); --Rn
+							AR <= "000" & i_ram_doByte(4 downto 3) & IR(2 downto 0);
+									
+							EXE_STATE <= E2;
+						when E2	=>
+							alu_src_1L <= i_ram_doByte;
+							alu_src_1H <= "00000000";	
+							alu_op_code <= ALU_OPC_DEC;	
+							alu_by_wd <= BYTE;
+							
+							exe_state <= E3;
+						WHEN E3	=>
+							if( alu_ans_L /= "00000000" ) then
+								if(DR(7) = '0') then
+									PC <= PC + DR(6 downto 0);
+								else 
+									PC <= PC - not(DR(6 downto 0)) - 1;	--negative
+								end if;
+                            end if;
+							
+							i_ram_diByte <= alu_ans_L;
+							RAM_WRITE_BYTE(AR);
+
+							CPU_STATE <= T0;
+							EXE_STATE <= E0;
+
+						WHEN OTHERS	=>
+					END CASE;	--DJNZ Rn,rel
+					
+				--DJNZ direct,rel
+				WHEN "11010101" =>
+					CASE EXE_STATE IS
+						WHEN E0	=>
+							ROM_READ(PC);
+							PC <= PC + '1';
+									
+							EXE_STATE <= E1;
+						WHEN E1	=>
+							ROM_READ(PC);
+							PC <= PC + '1';
+							RAM_READ_BYTE(i_rom_data); --dir
+							AR <= i_rom_data;
+									
+							EXE_STATE <= E2;
+						when E2	=>
+							DR <= i_rom_data; --rel
+							alu_src_1L <= i_ram_doByte;
+							alu_src_1H <= "00000000";	
+							alu_op_code <= ALU_OPC_DEC;	
+							alu_by_wd <= BYTE;
+							exe_state <= E3;
+						WHEN E3	=>
+							if( alu_ans_L /= "00000000" ) then
+								if(DR(7) = '0') then
+									PC <= PC + DR(6 downto 0);
+								else 
+									PC <= PC - not(DR(6 downto 0)) - 1;	--negative
+								end if;
+                            end if;
+							
+							i_ram_diByte <= alu_ans_L;
+							RAM_WRITE_BYTE(AR);
+							
+							CPU_STATE <= T0;
+							EXE_STATE <= E0;
+						
+						WHEN OTHERS	=>
+					END CASE;	--DJNZ direct,rel
+					
+				-- INC Rn
+				when "00001000" | "00001001" | "00001010" | "00001011" | "00001100" | "00001101" | "00001110" | "00001111" =>
+					case exe_state is
+						when E0	=>
+							RAM_READ_BYTE(xD0);	--psw
+									
+							exe_state <= E1;
+						when E1	=>
+							AR <= "000" & i_ram_doByte(4 downto 3) & IR(2 downto 0);
+							RAM_READ_BYTE("000" & i_ram_doByte(4 downto 3) & IR(2 downto 0));
+									
+							exe_state <= E2;
+						when E2	=>	
+							alu_src_1L <= i_ram_doByte;
+							alu_src_1H <= "00000000";	
+							alu_op_code <= ALU_OPC_INC;	
+							alu_by_wd <= BYTE;
+							
+							exe_state <= E3;
+						when E3	=>
+							RAM_WRITE_BYTE(AR);
+							i_ram_diByte <= alu_ans_L;	
+							
+							cpu_state <= T0;
+							exe_state <= E0;
+						when others	=>
+					end case;	--inc rn
+				
+				-- INC direct
+				when "00000101" =>
+					case exe_state is
+						when E0	=>
+							ROM_READ(PC);
+							PC <= PC + '1';
+									
+							exe_state <= E1;
+						when E1	=>
+							RAM_READ_BYTE(i_rom_data);
+							AR <= i_rom_data;
+									
+							exe_state <= E2;
+						when E2	=>
+							alu_src_1L <= i_ram_doByte;
+							alu_src_1H <= "00000000";	
+							alu_op_code <= ALU_OPC_INC;
+							alu_by_wd <= BYTE;
+							
+							exe_state <= E3;
+						when E3	=>
+							RAM_WRITE_BYTE(AR);
+							i_ram_diByte <= alu_ans_L;	
+							
+							cpu_state <= T0;
+							exe_state <= E0;
+						when others	=>
+					end case;	--inc direct
+				
+				-- INC @Ri
+				when "00000110" | "00000111" =>
+					case exe_state is
+						when E0	=>
+							RAM_READ_BYTE(xD0);	--psw
+									
+							exe_state <= E1;
+						when E1	=>
+							RAM_READ_BYTE("000" & i_ram_doByte(4 downto 3) & "00" & IR(0));
+									
+							exe_state <= E2;
+						
+						when E2 =>
+							AR <= i_ram_doByte;
+							RAM_READ_BYTE(i_ram_doByte);
+							
+							exe_state <= E3;
+									
+						when E3	=>
+							alu_src_1L <= i_ram_doByte;
+							alu_src_1H <= "00000000";	
+							alu_op_code <= ALU_OPC_INC;	
+							alu_by_wd <= BYTE;
+							
+							exe_state <= E4;
+						when E4	=>
+							RAM_WRITE_BYTE(AR);
+							i_ram_diByte <= alu_ans_L;	
+							
+							cpu_state <= T0;
+							exe_state <= E0;
+						when others	=>
+					end case;	-- INC @Ri
+				
+				-- INC DPTR
+				when "10100011" =>
+					case exe_state is
+						when E0	=>
+							RAM_READ_BYTE(x82);	--dpl
+									
+							exe_state <= E1;					
+						when E1	=>	
+							alu_src_1L <= i_ram_doByte;
+							alu_src_1H <= "00000000";	
+							alu_op_code <= ALU_OPC_INC;	
+							alu_by_wd <= BYTE;
+							
+							RAM_READ_BYTE(x83);	--dph
+							exe_state <= E2;
+						when E2	=>	
+							RAM_WRITE_BYTE(x82);
+							i_ram_diByte <= alu_ans_L;
+							
+							alu_src_1L <= i_ram_doByte;
+							alu_src_1H <= "00000000";	
+							alu_op_code <= ALU_OPC_INC;
+							alu_by_wd <= BYTE;
+							
+							exe_state <= E3;	
+						when E3	=>
+							RAM_WRITE_BYTE(x83);
+							i_ram_diByte <= alu_ans_L;	
+							
+							cpu_state <= T0;
+							exe_state <= E0;
+						when others	=>
+					end case;	---- INC DPTR
 					
 	
 

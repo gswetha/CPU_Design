@@ -960,6 +960,47 @@ begin
 						when others	=>
 					end case;	---- INC DPTR
 					
+				-- ADD A,Rn swetha
+				when "00101000" | "00101001" | "00101010" | "00101011" | "00101100" | "00101101" | "00101110" | "00101111" =>
+					case exe_state is
+						when E0	=>
+							RAM_READ_BYTE(xD0);
+							
+							exe_state <= E1;
+						when E1	=>		
+							AR <= i_ram_doByte;--put PSW into AR
+							RAM_READ_BYTE("000" & i_ram_doByte(4 downto 3) & IR(2 downto 0));
+							
+							exe_state <= E2;
+						when E2	=>
+							DR <= i_ram_doByte;
+							RAM_READ_BYTE(xE0);
+								
+							exe_state <= E3;
+						when E3	=>
+							alu_src_2L <= i_ram_doByte;
+							alu_src_2H <= "00000000";	
+							alu_src_1L <= DR;
+							alu_src_1H <= "00000000";	
+							alu_op_code <= ALU_OPC_ADD;
+							alu_by_wd <= BYTE;
+							alu_cy_bw <= '0';
+							
+							exe_state <= E4;
+						when E4	=>
+							RAM_WRITE_BYTE(xE0);
+							i_ram_diByte <= alu_ans_L;	
+							
+							exe_state <= E5;
+						when E5	=>
+							
+							RAM_WRITE_BYTE(xD0);
+							i_ram_diByte <= alu_cy & alu_ac & AR(5 downto 3) & alu_ov & AR(1 downto 0);
+							
+							cpu_state <= T0;
+							exe_state <= E0;
+						when others	=>
+					end case;	--add a, rn
 	
 
 

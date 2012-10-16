@@ -266,8 +266,10 @@ begin
 							exe_state <= E4;
 							
 					  when E4 =>
+							DR <= DR + '1';
+							DR <= DR + '1';
 							RAM_WRITE_BYTE(x81);
-							i_ram_diByte <= DR + '2';
+							i_ram_diByte <= DR;
 							PC <= PC(15 downto 11) & IR(7 downto 5) & AR;	--PC(10 downto 0) <= page address
 							
 							exe_state <= E0;	
@@ -282,14 +284,18 @@ begin
 					case exe_state is
 					
 					  when E0 =>
-							ROM_READ(PC + '1');  	   --read PC(7 downto 0)
+							PC <= PC + '1';
+							ROM_READ(PC);  	   --read PC(7 downto 0)
 							RAM_READ_BYTE(x81);		--read data in sp
-							PC <= PC + '2';
+							PC <= PC + '1';
+							PC <= PC + '1';
 							
 							exe_state <= E1;
 							
 					  when E1 =>
-							ROM_READ(PC - '2');			--read PC(15 downto 8)
+							PC <= PC - '1';
+							PC <= PC - '1';
+							ROM_READ(PC);			--read PC(15 downto 8)
 							RAM_WRITE_BYTE(i_ram_doByte + '1'); --write (PC + 2)(7 downto 0) to sp+1
 							i_ram_diByte <= PC(7 downto 0);
 							DR <= i_rom_data;  -- write PC(7 downto 0) to dr
@@ -298,15 +304,19 @@ begin
 							exe_state <= E2;
 							
 					  when E2 =>
-							RAM_WRITE_BYTE(AR + '2');     --write (PC + 2)(15 downto 8) into sp + 2
+							AR <= AR + '1';
+							AR <= AR + '1';
+							RAM_WRITE_BYTE(AR);     --write (PC + 2)(15 downto 8) into sp + 2
 							i_ram_diByte <= PC(15 downto 8);
 							PC <= i_rom_data & DR;
 							
 							exe_state <= E3;
 							
 					  when E3 =>
+							AR <= AR + '1';
+							AR <= AR + '1';
 							RAM_WRITE_BYTE(x81);				--write sp + 2 into sp 
-							i_ram_diByte <= AR + '2';		
+							i_ram_diByte <= AR;		
 							
 							exe_state <= E0;	
 							cpu_state <= T0;	
@@ -336,8 +346,10 @@ begin
 							exe_state <= E3;
 							
 					  when E3 =>
+							DR <= DR - '1';
+							DR <= DR - '1';
 							RAM_WRITE_BYTE(x81);
-							i_ram_diByte <= DR - '2';	--pop the 2nd of the stack
+							i_ram_diByte <= DR;	--pop the 2nd of the stack
 							PC(7 downto 0) <= i_ram_doByte;
 							
 							exe_state <= E0;	
@@ -369,8 +381,10 @@ begin
 							exe_state <= E3;
 							
 					  when E3 =>
+							DR <= DR - '1';
+							DR <= DR - '1';
 							RAM_WRITE_BYTE(x81);
-							i_ram_diByte <= DR - '2';	--pop 2nd of stack
+							i_ram_diByte <= DR;	--pop 2nd of stack
 							PC(7 downto 0) <= i_ram_doByte;
 							
 							exe_state <= E0;	

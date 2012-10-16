@@ -241,7 +241,7 @@ begin
 					
 				--ACALL addr11
 				when "00010001" | "00110001" | "01010001" | "01110001" | "10010001" | "10110001" | "11010001" | "11110001" =>
-					case_state is
+					case exe_state is
 						when E0 =>
 							ROM_READ(PC);  			--read PC(7 downto 0)
 							RAM_READ_BYTE(x81);		--read data in sp
@@ -259,7 +259,9 @@ begin
 							exe_state <= E3;
 							
 					  when E3 =>
-							RAM_WRITE_BYTE(DR + '2');	--write PC(15 downto 8) into sp + 2 
+							DR <= DR + '1';
+							DR <= DR + '1';
+							RAM_WRITE_BYTE(DR);	--write PC(15 downto 8) into sp + 2 
 							i_ram_diByte <= PC(15 downto 8);		
 							exe_state <= E4;
 							
@@ -467,7 +469,6 @@ begin
 							
 						when E3 =>
 						   PC <= PC + '1';
-							RESET_ALU;
 							
 							exe_state <= E0;	
 							cpu_state <= T0;	
